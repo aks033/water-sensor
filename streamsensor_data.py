@@ -32,7 +32,7 @@ def main():
 	total_pages = ast.literal_eval(req.text)["pageCount"]
 
 	# file desc
-	f= open("waterdata.csv","w+")
+	f= open("waterdata.csv","w")
 
 	for page in xrange(total_pages + 1):
 
