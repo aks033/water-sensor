@@ -1,11 +1,11 @@
 import requests
 import datetime
 import ast 
-
+import dateutil.parser
 
 def write_to_file(data,f):
 	for i in data:
-			f.write(str(i["time"])+ ","+ str(i["volume"]) + "\n")
+			f.write(str(dateutil.parser.parse(i["time"]))+ ","+ str(i["volume"]) + "\n")
 
 
 
@@ -34,7 +34,7 @@ def main():
 	# file desc
 	f= open("waterdata.csv","w")
 
-	for page in xrange(total_pages + 1):
+	for page in xrange(1,total_pages + 1):
 
 		url = 'https://api.streamlabswater.com/v1/locations/{}/readings/water-usage?startTime={}&page={}'.format(locationId,startTime,page) 
 		req = requests.get(url, headers=headers)
