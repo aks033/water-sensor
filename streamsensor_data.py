@@ -16,11 +16,15 @@ def main():
 	"Content-Type" : "application/json",
 	"Authorization" : "Bearer xPAOImRDeggl1KBLunUyNyPqeD_4cX61mZ9vqygnHISOa2qRc7h-Cg"
 	}
-	# url = 'https://api.streamlabswater.com/v1/locations'
-	# req = requests.get(url, headers=headers)
+	url = 'https://api.streamlabswater.com/v1/locations'
+	req = requests.get(url, headers=headers)
+	print req.text
 
 	total_pages = 0
-	locationId = "6632885f-31d6-4594-8bf1-cdb609e05096"
+	# locationId = "6632885f-31d6-4594-8bf1-cdb609e05096"
+	# filename = "waterdata.csv"
+	locationId = "03d367d4-00a6-4f7c-b3d5-1f3a5db2b186" # hot water
+	filename = "hotwater.csv"
 	startTime =  '2018-02-01T00:00:00.00Z'
 
 
@@ -32,7 +36,7 @@ def main():
 	total_pages = ast.literal_eval(req.text)["pageCount"]
 
 	# file desc
-	f= open("waterdata.csv","w")
+	f= open(filename,"w")
 
 	for page in xrange(1,total_pages + 1):
 
