@@ -1,11 +1,14 @@
 import requests
-import datetime
 import ast 
 import dateutil.parser
+from datetime import datetime, timedelta
+from dateutil import tz
+from pytz import timezone
 
-def write_to_file(data,f):
+def write_to_file(data,f, offset=0):
 	for i in data:
-			f.write(str(dateutil.parser.parse(i["time"]))+ ","+ str(i["volume"]) + "\n")
+			date_str = str(dateutil.parser.parse(i["time"])-timedelta(hours=offset))
+			f.write(date_str+ ","+ str(i["volume"]) + "\n")
 
 
 
@@ -21,10 +24,10 @@ def main():
 	print req.text
 
 	total_pages = 0
-	# locationId = "6632885f-31d6-4594-8bf1-cdb609e05096"
-	# filename = "waterdata.csv"
-	locationId = "03d367d4-00a6-4f7c-b3d5-1f3a5db2b186" # hot water
-	filename = "hotwater.csv"
+	locationId = "6632885f-31d6-4594-8bf1-cdb609e05096"
+	filename = "waterdata.csv"
+	# locationId = "03d367d4-00a6-4f7c-b3d5-1f3a5db2b186" # hot water
+	# filename = "hotwater.csv"
 	startTime =  '2018-02-01T00:00:00.00Z'
 
 
@@ -35,15 +38,16 @@ def main():
 	# print type(req.text)
 	total_pages = ast.literal_eval(req.text)["pageCount"]
 
-	# file desc
-	f= open(filename,"w")
-
+	# file descriptor
+	f = open(filename,"w")
+	f_b = open("backup.csv", "w")
 	for page in xrange(1,total_pages + 1):
 
 		url = 'https://api.streamlabswater.com/v1/locations/{}/readings/water-usage?startTime={}&page={}'.format(locationId,startTime,page) 
 		req = requests.get(url, headers=headers)
 		data = ast.literal_eval(req.text)
 		# print data
+		write_to_file(data["readings"] , f_b, 4)
 		write_to_file(data["readings"] , f)
 
 
